@@ -1,0 +1,11 @@
+arduino
+========
+
+What is arduino?
+-----------------
+arduino contains classes for interfacing with the Arduino Microcontrollers and
+adds different helper classes
+
+Status
+-------
+ALPHA
