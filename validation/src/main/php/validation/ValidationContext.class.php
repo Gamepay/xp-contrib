@@ -23,15 +23,17 @@
 
     public function __construct(
       $name,
-      ValidationServiceInterface $validationService,
-      ValidationContextInterface $parentContext= NULL
+      ValidationServiceInterface $validationService
     ) {
       if (!isset($name) || empty($name)) {
         throw new IllegalArgumentException('$name must be a non empty string!');
       }
       $this->name= $name;
       $this->validationService= $validationService;
-      $this->parentContext= $parentContext;
+    }
+
+    public function getName() {
+      return $this->name;
     }
 
     public function getValidationService() {
@@ -40,6 +42,12 @@
 
     public function getParentContext() {
       return $this->parentContext;
+    }
+
+    protected function setParentContext(
+      ValidationContextInterface $parentContext
+    ) {
+      $this->parentContext= $parentContext;
     }
 
     public function getChildContextNames() {
@@ -58,7 +66,9 @@
           $childContext= $this->newChildContext($name);
           $this->childContext[$name]= $childContext;
         } else {
-          throw new IllegalStateException('no child context with name '.$name.'found!');
+          throw new IllegalStateException(
+            'no child context with name "'.$name.'" found!'
+          );
         }
       }
       return $this->childContext[$name];
@@ -66,7 +76,9 @@
 
     public function logMessage($message) {
       if (!is_string($message) || empty($message)) {
-        throw new IllegalArgumentException('$message must be a non empty string!');
+        throw new IllegalArgumentException(
+          '$message must be a non empty string!'
+        );
       }
       $this->messages[]= $message;
     }
@@ -103,7 +115,9 @@
 
     protected function newChildContext($name) {
       $classname= get_class($this);
-      return new $classname($name, $this->validationService, $this);
+      $instance= new $classname($name, $this->validationService);
+      $instance->setParentContext($this);
+      return $instance;
     }
   }
 

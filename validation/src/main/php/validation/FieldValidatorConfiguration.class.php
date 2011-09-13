@@ -17,8 +17,13 @@
     protected
       $fieldName= NULL;
 
-    public function __construct($fieldName, $type, $mode, array $parameter) {
-      parent::__construct($type, $mode, $parameter);
+    public function __construct(
+      $fieldName,
+      $type,
+      array $parameter= array(),
+      array $groups= NULL
+    ) {
+      parent::__construct($type, $parameter, $groups);
       $this->setFieldName($fieldName);
     }
 
@@ -28,7 +33,9 @@
 
     public function setFieldName($fieldName) {
       if (!is_string($fieldName) || empty($fieldName)) {
-        throw new IllegalArgumentException('$fieldName must be a non empty string!');
+        throw new IllegalArgumentException(
+          '$fieldName must be a non empty string!'
+        );
       }
       $this->fieldName= $fieldName;
     }

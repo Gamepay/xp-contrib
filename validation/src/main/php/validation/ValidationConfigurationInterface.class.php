@@ -11,13 +11,17 @@
 
     public function getName();
 
-    public function addClassConfiguration(ValidatorConfigurationInterface $configuration);
+    public function addClassConfiguration(
+      ValidatorConfigurationInterface $configuration
+    );
 
     public function getClassConfigurations();
 
     public function getFieldNames();
 
-    public function addFieldConfiguration(FieldValidatorConfigurationInterface $configuration);
+    public function addFieldConfiguration(
+      FieldValidatorConfigurationInterface $configuration
+    );
 
     public function getFieldConfigurations($field);
 

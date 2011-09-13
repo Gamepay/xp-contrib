@@ -34,7 +34,9 @@
 
     public function addPackage($package) {
       if (!is_string($package) || empty($package)) {
-        throw new IllegalArgumentException('$package must be a non empty string!');
+        throw new IllegalArgumentException(
+          '$package must be a non empty string!'
+        );
       }
       $this->packages[]= Package::forName($package);
     }

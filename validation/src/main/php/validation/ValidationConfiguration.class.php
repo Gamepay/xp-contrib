@@ -29,7 +29,9 @@
       return $this->name;
     }
 
-    public function addClassConfiguration(ValidatorConfigurationInterface $configuration) {
+    public function addClassConfiguration(
+      ValidatorConfigurationInterface $configuration
+    ) {
       $this->classConfigurations[]= $configuration;
     }
 
@@ -41,7 +43,9 @@
       return array_keys($this->fieldsConfigurations);
     }
 
-    public function addFieldConfiguration(FieldValidatorConfigurationInterface $configuration) {
+    public function addFieldConfiguration(
+      FieldValidatorConfigurationInterface $configuration
+    ) {
       $fieldName= $configuration->getFieldName();
       if (!isset($this->fieldsConfigurations[$fieldName])) {
         $this->fieldsConfigurations[$fieldName]= array();
@@ -51,10 +55,13 @@
 
     public function getFieldConfigurations($field) {
       if (!is_string($field) || empty($field)) {
-        throw new IllegalArgumentException('$field must be a non empty string!');
+        throw new IllegalArgumentException(
+          '$field must be a non empty string!'
+        );
       }
       if (!isset($this->fieldsConfigurations[$field])) {
-        return array();
+        $retval= array();
+        return $retval;
       }
       return $this->fieldsConfigurations[$field];
     }

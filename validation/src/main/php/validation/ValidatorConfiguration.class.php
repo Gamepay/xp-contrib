@@ -4,6 +4,10 @@
    * $Id$
    */
 
+  uses(
+    'validation.ValidatorConfigurationInterface'
+  );
+
   /**
    *
    */
@@ -11,12 +15,16 @@
 
     protected
       $type     = NULL,
-      $mode     = NULL,
+      $groups   = NULL,
       $parameter= array();
 
-    public function __construct($type, $mode, array $parameter) {
+    public function __construct(
+      $type,
+      array $parameter= array(),
+      array $groups= NULL
+    ) {
       $this->setType($type);
-      $this->setMode($mode);
+      $this->setGroups($groups);
       $this->setParameter($parameter);
     }
 
@@ -31,15 +39,24 @@
       $this->type= $type;
     }
 
-    public function getMode() {
-      return $this->mode;
+    public function getGroups() {
+      return $this->groups;
     }
 
-    public function setMode($mode) {
-      if (isset($mode) && (!is_string($mode) || empty($mode))) {
-        throw new IllegalArgumentException('$mode must be null or a non empty string!');
+    public function setGroups(array $groups= NULL) {
+      if (isset($groups)) {
+        $toset= array();
+        foreach ($groups as $group) {
+          if (!is_string($group) || empty($group)) {
+            throw new IllegalArgumentException(
+              '$groups must be null or an array of non empty strings!'
+            );
+          }
+          $toset[]= $group;
+        }
+        $groups= $toset;
       }
-      $this->mode= $mode;
+      $this->groups= $groups;
     }
 
     public function getParameter() {

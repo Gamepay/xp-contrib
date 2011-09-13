@@ -13,7 +13,9 @@
    */
   interface ValidationConfigurationProviderInterface {
 
-    public function extendConfiguration(ValidationConfigurationInterface $configuration);
+    public function extendConfiguration(
+      ValidationConfigurationInterface $configuration
+    );
 
   }
 ?>

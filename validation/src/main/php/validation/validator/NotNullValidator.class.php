@@ -15,7 +15,11 @@
    */
   class NotNullValidator implements ValidatorInterface {
 
-    public function validate($value, ValidatorConfiguration $configuration, ValidationContextInterface $context) {
+    public function validate(
+      $value,
+      ValidatorConfiguration $configuration,
+      ValidationContextInterface $context
+    ) {
       if (!isset($value)) {
         $context->logMessage('Value must not be null!');
       }

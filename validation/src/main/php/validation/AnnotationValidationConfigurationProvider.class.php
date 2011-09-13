@@ -21,7 +21,9 @@
    */
   class AnnotationValidationConfigurationProvider implements ValidationConfigurationProviderInterface {
 
-    public function extendConfiguration(ValidationConfigurationInterface $configuration) {
+    public function extendConfiguration(
+      ValidationConfigurationInterface $configuration
+    ) {
       $classname= $configuration->getName();
       $class= XPClass::forName($classname);
 
@@ -39,18 +41,23 @@
           $type= $parameter['type'];
           unset($parameter['type']);
 
-          $mode= NULL;
-          if (isset($parameter['mode'])) {
-            $mode= $parameter['mode'];
-            unset($parameter['mode']);
+          $groups= NULL;
+          if (isset($parameter['groups'])) {
+            $groups= $parameter['groups'];
+            unset($parameter['groups']);
           }
 
           if (isset($fieldName)) {
-            $classConfiguration= $this->newFieldValidatorConfiguration($fieldName, $type, $mode, $parameter);
+            $fieldConfiguration= $this->newFieldValidatorConfiguration(
+              $fieldName, $type, $parameter, $groups
+            );
+            $configuration->addFieldConfiguration($fieldConfiguration);
           } else {
-            $classConfiguration= $this->newValidatorConfiguration($type, $mode, $parameter);
+            $classConfiguration= $this->newValidatorConfiguration(
+              $type, $parameter, $groups
+            );
+            $configuration->addClassConfiguration($classConfiguration);
           }
-          $configuration->addClassConfiguration($classConfiguration);
         }
       }
 
@@ -72,12 +79,14 @@
           $type= $parameter['type'];
           unset($parameter['type']);
 
-          $mode= NULL;
-          if (isset($parameter['mode'])) {
-            $mode= $parameter['mode'];
-            unset($parameter['mode']);
+          $groups= NULL;
+          if (isset($parameter['groups'])) {
+            $groups= $parameter['groups'];
+            unset($parameter['groups']);
           }
-          $fieldConfiguration= $this->newFieldValidatorConfiguration($fieldName, $type, $mode, $parameter);
+          $fieldConfiguration= $this->newFieldValidatorConfiguration(
+            $fieldName, $type, $parameter, $groups
+          );
           $configuration->addFieldConfiguration($fieldConfiguration);
         }
       }
@@ -100,12 +109,14 @@
           $type= $parameter['type'];
           unset($parameter['type']);
 
-          $mode= NULL;
-          if (isset($parameter['mode'])) {
-            $mode= $parameter['mode'];
-            unset($parameter['mode']);
+          $groups= NULL;
+          if (isset($parameter['groups'])) {
+            $groups= $parameter['groups'];
+            unset($parameter['groups']);
           }
-          $fieldConfiguration= $this->newFieldValidatorConfiguration($fieldName, $type, $mode, $parameter);
+          $fieldConfiguration= $this->newFieldValidatorConfiguration(
+            $fieldName, $type, $parameter, $groups
+          );
           $configuration->addFieldConfiguration($fieldConfiguration);
         }
       }
@@ -133,12 +144,18 @@
       return $methodName;
     }
 
-    protected function newValidatorConfiguration($type, $mode, array $parameter) {
-      return new ValidatorConfiguration($type, $mode, $parameter);
+    protected function newValidatorConfiguration(
+      $type, array $parameter, array $groups= NULL
+    ) {
+      return new ValidatorConfiguration($type, $parameter, $groups);
     }
 
-    protected function newFieldValidatorConfiguration($fieldName, $type, $mode, array $parameter) {
-      return new FieldValidatorConfiguration($fieldName, $type, $mode, $parameter);
+    protected function newFieldValidatorConfiguration(
+      $fieldName, $type, array $parameter, array $groups= NULL
+    ) {
+      return new FieldValidatorConfiguration(
+        $fieldName, $type, $parameter, $groups
+      );
     }
   }
 ?>
