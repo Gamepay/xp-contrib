@@ -32,7 +32,8 @@
       ValidatorProviderInterface $validatorProvider= NULL
     ) {
       if (!isset($configurationProvider)) {
-        $this->configurationProvider= new AnnotationValidationConfigurationProvider();
+        $this->configurationProvider=
+          new AnnotationValidationConfigurationProvider();
       }
       if (!isset($validatorProvider)) {
         $this->validatorProvider= new DefaultValidatorProvider();
@@ -55,19 +56,31 @@
           throw new Exception('unable to locate validator type '.$type);
         }
         if (! $validator instanceof ValidatorInterface) {
-          throw new Exception('validator is not in instanceof ValidatorInterface');
+          throw new Exception(
+            'validator is not in instanceof ValidatorInterface'
+          );
         }
         $this->validator[$type]= $validator;
       }
       return $this->validator[$type];
     }
 
-    public function validate($object, $mode= NULL, ValidationContextInterface $context= NULL) {
+    public function validate(
+      $object,
+      array $groups= NULL,
+      ValidationContextInterface $context= NULL
+    ) {
       if (!is_object($object)) {
         throw new IllegalArgumentException('$object must be an object');
       }
-      if (isset($mode) && (!is_string($mode) || empty($mode))) {
-        throw new IllegalArgumentException('$mode must be null or a non empty string!');
+      if (isset($groups)) {
+        foreach ($groups as $group) {
+          if (!is_string($group) || empty($group)) {
+            throw new IllegalArgumentException(
+              '$groups must be null or an array of non empty string!'
+            );
+          }
+        }
       }
       $class= XPClass::forName(xp::typeOf($object));
       if (!isset($context)) {
@@ -106,6 +119,16 @@
         $configuration= $this->getConfiguration($class->getName());
 
         foreach ($configuration->getClassConfigurations() as $validatorConf) {
+          $confGroups= $validatorConf->getGroups();
+          if (isset($confGroups)) {
+            if (!isset($groups)) {
+              continue;
+            }
+            $intersect= array_intersect($groups, $confGroups);
+            if (empty($intersect)) {
+              continue;
+            }
+          }
           $validator= $this->getValidator($validatorConf->getType());
           $validator->validate($object, $validatorConf, $context);
         }
@@ -127,10 +150,20 @@
             $read= $this->collectValue($object, $class, $fieldName, $value);
           }
           if (!$read) {
-            $read= $this->collectValue($object, $class, 'is'.$fieldName, $value);
+            $read= $this->collectValue(
+              $object,
+              $class,
+              'is'.$fieldName,
+              $value
+            );
           }
           if (!$read) {
-            $read= $this->collectValue($object, $class, 'get'.$fieldName, $value);
+            $read= $this->collectValue(
+              $object,
+              $class,
+              'get'.$fieldName,
+              $value
+            );
           }
 
           if (!$read) {
@@ -139,7 +172,20 @@
 
           $childContext= $context->getChildContext($fieldName, TRUE);
 
-          foreach ($configuration->getFieldConfigurations($fieldName) as $validatorConf) {
+          foreach (
+            $configuration->getFieldConfigurations($fieldName) as
+                                                              $validatorConf
+          ) {
+            $confGroups= $validatorConf->getGroups();
+            if (isset($confGroups)) {
+              if (!isset($groups)) {
+                continue;
+              }
+              $intersect= array_intersect($groups, $confGroups);
+              if (empty($intersect)) {
+                continue;
+              }
+            }
             $validator= $this->getValidator($validatorConf->getType());
             $validator->validate($value, $validatorConf, $childContext);
           }
@@ -150,7 +196,12 @@
       return $context;
     }
 
-    protected function collectValue($object, XPClass $class, $methodName, &$value) {
+    protected function collectValue(
+      $object,
+      XPClass $class,
+      $methodName,
+      &$value
+    ) {
       if (!$class->hasMethod($methodName)) {
         return FALSE;
       }

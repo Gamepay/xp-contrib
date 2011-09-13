@@ -11,7 +11,9 @@
   /**
    *
    */
-  interface FieldValidatorConfigurationInterface extends ValidatorConfigurationInterface {
+  interface FieldValidatorConfigurationInterface extends
+    ValidatorConfigurationInterface
+  {
 
     public function getFieldName();
 

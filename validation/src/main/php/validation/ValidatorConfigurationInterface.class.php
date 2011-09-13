@@ -13,9 +13,9 @@
 
     public function setType($type);
 
-    public function getMode();
+    public function getGroups();
 
-    public function setMode($mode);
+    public function setGroups(array $groups= NULL);
 
     public function getParameter();
 

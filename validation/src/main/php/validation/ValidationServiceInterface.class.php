@@ -9,7 +9,11 @@
    */
   interface ValidationServiceInterface {
 
-    public function validate($object, $mode= NULL);
+    public function validate(
+      $object,
+      array $groups= NULL,
+      ValidationContextInterface $context= NULL
+    );
 
   }
 ?>

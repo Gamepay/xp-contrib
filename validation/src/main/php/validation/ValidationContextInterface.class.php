@@ -9,6 +9,8 @@
    */
   interface ValidationContextInterface {
 
+    public function getName();
+
     public function getValidationService();
 
     public function getParentContext();
@@ -19,7 +21,9 @@
 
     public function logMessage($message);
 
-    public function getMessages();
+    public function hasMessages($recursive= TRUE);
+
+    public function getMessages($recursive= TRUE);
   }
 
 ?>

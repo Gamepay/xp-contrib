@@ -14,7 +14,11 @@
    */
   interface ValidatorInterface {
 
-    public function validate($value, ValidatorConfiguration $configuration, ValidationContextInterface $context);
+    public function validate(
+      $value,
+      ValidatorConfiguration $configuration,
+      ValidationContextInterface $context
+    );
 
   }
 ?>
