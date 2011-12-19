@@ -6,14 +6,13 @@
 >
   <info
    organisation="net.xp_framework"
-   module="ietf"
+   module="dict"
    status="integration"
-   revision="5.8.4"
+   revision="1.0.0"
   >
     <license name="BSD"/>
-    <description homepage="http://xp-framework.net/">The ietf module is an add-on to the XP framework that adds
-      support of different standards defined by IETF. Currently only
-      UUID and PunyCode is implemented.</description>
+    <description homepage="http://www.dict.org/">Client implementation for the DICT server protocol which is specified
+      in RFC 2229.</description>
   </info>
   <configurations>
     <conf name="default" visibility="public"/>
@@ -21,17 +20,24 @@
   </configurations>
   <publications>
     <artifact
-     name="ietf"
+     name="dict"
      type="xar"
      ext="xar"
      conf="default"
+    />
+    <artifact
+     name="dict-test"
+     type="xar"
+     ext="xar"
+     conf="test"
     />
   </publications>
   <dependencies>
     <dependency
      org="net.xp_framework"
      name="core"
-     rev="5.8.4+"
+     rev="latest.integration"
+     revConstraint="5.8.3"
     />
   </dependencies>
 </ivy-module>
